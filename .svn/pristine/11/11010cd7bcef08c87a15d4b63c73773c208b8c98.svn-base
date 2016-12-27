@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="org.lanqiao.mapper.MovieListFullMapper"> 
+  <insert id="insertVote" parameterType="hashmap">  
+          insert into am_vote(vote_score,vote_movie_id,vote_user_id,vote_id)  values(#{vote_score},#{vote_movie_id},#{vote_user_id},#{vote_id})
+  </insert>
+  
+  <select id="findScore"  parameterType="string" resultType="double">  
+         SELECT
+			CASE
+		WHEN TRUNCATE (SUM(vote_score) / COUNT(*), 1) IS NULL THEN
+			0
+		ELSE
+			TRUNCATE (SUM(vote_score) / COUNT(*), 1)
+		END AS vote_score
+		FROM
+			am_vote
+		WHERE
+			am_vote.vote_movie_id = #{id}
+  </select> 
+    
+  <select id="findVoteScore1"  parameterType="string" resultType="double">  
+            SELECT IFNULL(MAX(vote_score),0) AS vote_score FROM am_vote WHERE vote_movie_id=#{vote_movie_id} and vote_user_id=#{vote_user_id}
+  </select> 
+    
+  <select id="findVoteScore"  parameterType="string" resultType="double">  
+            SELECT IFNULL(MAX(vote_score),0) AS vote_score FROM am_vote WHERE vote_movie_id=#{vote_movie_id}
+  </select>  
+    
+  <select id="findVoteNum"  parameterType="string" resultType="int">  
+          select count(*) from am_vote where vote_movie_id=#{vote_movie_id}
+  </select>
+  
+  <select id="selectVoteObject"  parameterType="hashmap" resultMap="votemap">  
+          select * from am_vote where vote_user_id=#{vote_user_id} and vote_movie_id=#{vote_movie_id}
+  </select>
+  <resultMap type="org.lanqiao.entity.AmVote" id="votemap">
+      
+      <id property="id" column="vote_id"/>
+      <result property="userid" column="vote_user_id"/>
+      <result property="movieid" column="vote_movie_id"/>
+      <result property="score" column="vote_score"/>
+  </resultMap>
+  
+  <select id="findShowtime"  parameterType="string" resultType="hashmap">  
+      <![CDATA[   
+       SELECT a4.cinema_name,DATE_FORMAT(a2.schedule_begintime,'%H:%i')  schedule_begintime FROM am_movie a1,am_schedule a2,am_hall a3,am_cinema a4 WHERE a1.movie_id=a2.schedule_movie_id AND a2.schedule_hall_id=a3.hall_id AND a3.hall_cinema_id=a4.cinema_id AND a1.movie_id=#{movie_id} AND a2.schedule_begintime<=DATE_FORMAT(NOW(),'%H:%i:%s') ORDER BY cinema_name,schedule_begintime
+  	  ]]>
+  </select>
+  
+  <select id="findphotoNum"  parameterType="string" resultType="int">  
+          select count(*) from am_movie a1,am_image a2 where a1.movie_id=a2.image_movie_id and a1.movie_id=#{movie_id}
+  </select>
+  
+  <select id="findcomNum"  parameterType="string" resultType="int">  
+          select count(*) from am_movie a1,am_comment a2 where a1.movie_id=a2.comment_movie_id and a1.movie_id=#{movie_id}
+  </select>
+  
+  <select id="findMovieById"  parameterType="string" resultType="hashmap">  
+          select * from am_movie where movie_id=#{movie_id}
+  </select>
+        
+  <select id="findMovie"  resultType="hashmap">  
+          select * from am_movie
+  </select> 
+       
+  <select id="findInfo"  parameterType="hashmap" resultType="hashmap">  
+          select *  from am_movie 
+          <where>
+          		<if test="condition.moviename!=null">
+          			movie_name like   '%${condition.moviename}%' 
+          		</if>
+          		<if test="condition.category!=null">
+          			and movie_category like   '%${condition.category}%' 
+          		</if>
+          		<if test="condition.actor!=null">
+          			and movie_actors like   '%${condition.actor}%' 
+          		</if>
+          		<if test="condition.director!=null">
+          			and movie_director like   '%${condition.director}%' 
+          		</if>
+          		<if test="condition.country!=null">
+          			and movie_country like   '%${condition.country}%' 
+          		</if>
+          </where>
+          
+          order by movie_isdisplay desc,movie_views desc 
+          
+          limit #{num1},#{num2}
+          
+  </select> 
+  
+  <select id="findAllMid"  resultType="string">  
+          select am_movie.movie_id
+			from am_movie
+  </select> 
+</mapper>  

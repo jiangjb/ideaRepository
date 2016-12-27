@@ -1,0 +1,28 @@
+package org.lanqiao.service;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.lanqiao.entity.AmCinema;
+import org.lanqiao.entity.AmHall;
+/**
+ * 影院管理后台
+ * @author 邓海童
+ *
+ */
+public interface CinemaAdminService {
+		//1.添加影院
+		public void addCinema(AmCinema cinema);
+		//2.展示影院
+		public Map<String,Object> selectCinema();
+		//3.删除影院
+		public void deleteCinema(String cid);
+		//4.展示已删除的影院
+		public List<HashMap> selectBackCinema();
+		//5.查找影院
+		public List<HashMap> findCinema(String cinemaname,String cityname);
+		//6.修改影院信息
+		public void updateCinema(AmCinema cinema,String cid);
+		
+		public void addDefaultHall(AmHall hall);
+}

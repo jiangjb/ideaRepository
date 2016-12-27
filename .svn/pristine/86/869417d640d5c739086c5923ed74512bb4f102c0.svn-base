@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="org.lanqiao.mapper.IndexMapper">
+	<select id="selectTodayBest" resultType="hashmap">
+		<![CDATA[
+			SELECT
+				t1.*,
+				t2.avg_score
+			FROM
+				(SELECT * FROM am_movie) t1
+			INNER JOIN (
+				SELECT
+					TRUNCATE (avg(vote_score), 1) AS avg_score,
+					vote_movie_id AS movie_id
+				FROM
+					am_vote
+				GROUP BY
+					vote_movie_id
+			) t2 ON t1.movie_id = t2.movie_id and t1.movie_isdisplay=1
+			ORDER BY
+				avg_score DESC
+			LIMIT 0,6
+		]]>
+	</select>
+	<select id="selectTodayBestOther" resultType="hashmap">
+		<![CDATA[
+			SELECT
+				t1.*,
+				t2.avg_score
+			FROM
+				(SELECT * FROM am_movie) t1
+			INNER JOIN (
+				SELECT
+					TRUNCATE (avg(vote_score), 1) AS avg_score,
+					vote_movie_id AS movie_id
+				FROM
+					am_vote
+				GROUP BY
+					vote_movie_id
+			) t2 ON t1.movie_id = t2.movie_id and t1.movie_isdisplay=1
+			ORDER BY
+				avg_score DESC
+			LIMIT 6,6
+		]]>
+	</select>
+	<select id="selectTodaySales" resultType="hashmap">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				am_movie
+			WHERE
+				movie_isdisplay = 1
+			ORDER BY
+				movie_sales DESC
+			LIMIT 0,
+			10
+		]]>
+	</select>
+	<select id="selectClassicMovie" resultType="hashmap">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				am_movie
+			WHERE
+				movie_sort = 0
+			ORDER BY
+				am_movie.movie_views DESC
+			LIMIT 0,
+			 3
+		]]>
+	</select>
+<!-- 条件查询 -->
+	<select id="selectByMovieName" parameterType="string" resultType="hashmap">
+		SELECT * FROM am_movie
+		where movie_name like '%${value}%'
+	</select>
+	<select id="selectByCategory" parameterType="string" resultType="hashmap">
+		SELECT * FROM am_movie
+		where movie_category like '%${value}%'
+	</select>
+	<select id="selectByCountry" parameterType="string" resultType="hashmap">
+		SELECT * FROM am_movie
+		where movie_country like '%${value}%'
+	</select>
+	<select id="selectByDirector" parameterType="string" resultType="hashmap">
+		SELECT * FROM am_movie
+		where movie_director like '%${value}%'
+	</select>
+	<select id="selectByActor" parameterType="string" resultType="hashmap">
+		SELECT * FROM am_movie
+		where movie_actors like '%${value}%'
+	</select>
+	
+	<select id="selectMoviePhotoNumByMid" parameterType="string" resultType="int">
+		SELECT
+			count(1)
+		FROM
+			am_movie,
+			am_image
+		WHERE
+			am_movie.movie_id = am_image.image_movie_id
+		AND am_movie.movie_id = #{id}
+	</select>
+	<select id="selectMovieCommentNumByMid" parameterType="string" resultType="int">
+		SELECT
+			count(1)
+		FROM
+			am_movie,
+			am_comment
+		WHERE
+			am_movie.movie_id = am_comment.comment_movie_id
+		AND am_movie.movie_id = #{id}
+	</select>
+</mapper>

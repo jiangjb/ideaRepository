@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lanqiao.mapper.UserManageAdminMapper">
+
+	<select id="findUserByName" parameterType="string" resultType="hashmap">
+		<![CDATA[
+			SELECT user_id,user_name,user_tel,user_email,DATE(user_registtime) as user_registtime FROM am_user WHERE  user_name LIKE CONCAT(CONCAT('%', #{user_name}), '%'); 
+		]]>
+	</select>
+
+    <select id="findUserNum10" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM am_user WHERE  DATE(user_registtime)='2016-12-10'  
+		]]>
+	</select>
+    
+    <select id="findUserNum9" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM am_user WHERE  DATE(user_registtime)='2016-12-09'  
+		]]>
+	</select>
+    
+    <select id="findUserNum8" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM am_user WHERE  DATE(user_registtime)='2016-12-08'  
+		]]>
+	</select>
+    
+    <select id="findUserNum7" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM am_user WHERE  DATE(user_registtime)='2016-12-07'  
+		]]>
+	</select>
+    
+    <select id="findUserNum6" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM am_user WHERE  DATE(user_registtime)='2016-12-06'  
+		]]>
+	</select>
+    
+    <select id="findUserNum5" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM am_user WHERE  DATE(user_registtime)='2016-12-05'  
+		]]>
+	</select>
+    
+    <select id="findUserNum4" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM am_user WHERE  DATE(user_registtime)='2016-12-04'  
+		]]>
+	</select>
+    
+    <select id="findUserNum3" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM am_user WHERE  DATE(user_registtime)='2016-12-03'  
+		]]>
+	</select>
+    
+    <select id="findUserNum2" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM am_user WHERE  DATE(user_registtime)='2016-12-02'  
+		]]>
+	</select>
+    
+    <select id="findUserNum1" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM am_user WHERE  DATE(user_registtime)='2016-12-01'  
+		]]>
+	</select>
+    
+    <select id="findUserNumber" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM am_user WHERE  DATE(user_registtime)>='2016-12-01' AND  DATE(user_registtime)<='2016-12-10' 
+		]]>
+	</select>
+    
+	<select id="findAllUser" resultType="hashmap">
+		<![CDATA[
+			select * from am_user order by user_registtime
+		]]>
+	</select>
+	
+	<update id="updateUser" parameterType="hashmap">
+		<![CDATA[
+			update am_user set user_name=#{user_name}, user_tel=#{user_tel}, user_email=#{user_email} where user_id=#{user_id}
+		]]>
+	</update>
+	
+	<delete id="deleteUser" parameterType="string">
+		<![CDATA[
+			delete from am_user where user_id=#{user_id}
+		]]>
+	</delete>
+</mapper>

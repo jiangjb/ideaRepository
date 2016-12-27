@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="org.lanqiao.mapper.LoginAdminMapper">
+	<select id="findUserByNameAndPassword" resultMap="userMap">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				am_admin
+			WHERE
+				am_admin.admin_username = #{0}
+			AND am_admin.admin_password = #{1}
+		]]>
+	</select>
+	
+	<resultMap type="org.lanqiao.entity.AmAdmin" id="userMap">
+		<result property="username" column="admin_username"/>
+		<result property="password" column="admin_password"/>
+	</resultMap>
+</mapper>

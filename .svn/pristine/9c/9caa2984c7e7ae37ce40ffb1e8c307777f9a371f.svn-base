@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="org.lanqiao.mapper.MovieManageAdminMapper">
+	<select id="selectAllMovie" resultType="hashmap">
+		<![CDATA[
+			SELECT
+				t1.*,
+				t2.avg_score
+			FROM
+				(SELECT * FROM am_movie) t1
+			INNER JOIN (
+				SELECT
+					TRUNCATE (avg(vote_score), 1) AS avg_score,
+					vote_movie_id AS movie_id
+				FROM
+					am_vote
+				GROUP BY
+					vote_movie_id
+			) t2 ON t1.movie_id = t2.movie_id
+			ORDER BY
+				avg_score DESC
+		]]>
+	</select>
+	<select id="selectMovieByid" resultType="hashmap" parameterType="String">
+		<![CDATA[
+			SELECT
+				t1.*,
+				t2.avg_score
+			FROM
+				(SELECT * FROM am_movie) t1
+			INNER JOIN (
+				SELECT
+					TRUNCATE (avg(vote_score), 1) AS avg_score,
+					vote_movie_id AS movie_id
+				FROM
+					am_vote
+				GROUP BY
+					vote_movie_id
+			) t2 ON t1.movie_id = t2.movie_id
+			where t1.movie_id = #{id}
+		]]>
+	</select>
+	<delete id="deleteOneMovie" parameterType="string" >
+		<![CDATA[
+			DELETE am_movie,
+			 am_comment,
+			 am_image
+			FROM
+				am_movie
+			LEFT JOIN am_comment ON am_movie.movie_id = am_comment.comment_movie_id
+			LEFT JOIN am_image ON am_movie.movie_id = am_image.image_movie_id
+			WHERE
+				am_movie.movie_id = #{id};
+		]]>
+	</delete>
+	<delete id="deleteSomeMovie" parameterType="java.lang.String">
+		DELETE am_movie,
+			 am_comment,
+			 am_image
+			FROM
+				am_movie
+			LEFT JOIN am_comment ON am_movie.movie_id = am_comment.comment_movie_id
+			LEFT JOIN am_image ON am_movie.movie_id = am_image.image_movie_id
+			WHERE
+				am_movie.movie_id in <foreach collection="array" item="item" open="("
+					separator="," close=")">
+				#{item}
+				</foreach>
+	</delete>
+	<insert id="addMovie" parameterType="org.lanqiao.entity.AmMovie">
+		<![CDATA[
+			INSERT INTO am_movie (
+			movie_id,
+			movie_name,
+			movie_minute,
+			movie_releaseyear,
+			movie_releasemonth,
+			movie_country,
+			movie_category,
+			movie_director,
+			movie_actors,
+			movie_sales,
+			movie_plot,
+			movie_video,
+			movie_views,
+			movie_sort,
+			movie_isdisplay,
+			movie_imgurl,
+			movie_picture
+		)
+		VALUES
+			(
+				#{id},
+				#{name},
+				#{minute},
+				#{releaseyear},
+				#{releasemonth},
+				#{country},
+				#{category},
+				#{director},
+				#{actors},
+				#{sales},
+				#{plot},
+				#{video},
+				#{views},
+				#{sort},
+				#{isdisplay},
+				#{imgurl},
+				#{picture}
+			)
+		]]>
+	</insert>
+	<update id="updateMovie" parameterType="org.lanqiao.entity.AmMovie">
+		<![CDATA[
+			UPDATE am_movie 
+			SET 
+			 movie_name = #{name},
+			 movie_minute = #{minute},
+			 movie_releaseyear = #{releaseyear},
+			 movie_releasemonth = #{releasemonth},
+			 movie_country = #{country},
+			 movie_category = #{category},
+			 movie_director = #{director},
+			 movie_actors = #{actors},
+			 movie_plot = #{plot},
+			 movie_isdisplay = #{isdisplay},
+			 movie_imgurl = #{imgurl}
+			WHERE
+			movie_id = #{id}
+		]]>
+	</update>
+</mapper>

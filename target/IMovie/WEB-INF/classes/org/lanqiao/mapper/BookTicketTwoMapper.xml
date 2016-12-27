@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lanqiao.mapper.BookTicketTwoMapper">
+
+	<select id="findAllSeatByScheduleId" resultType="string" parameterType="string">
+		<![CDATA[
+			SELECT
+				am_seat.seat_code
+			FROM
+				am_detail,
+				am_seat
+			WHERE
+				am_seat.seat_id = am_detail.detail_seat_id
+			AND am_detail.detail_schedule_id = #{id}
+		]]>
+	</select>
+	<select id="findMovieInfoByScheduleId" resultType="hashmap" parameterType="string">
+		<![CDATA[
+			SELECT
+				am_movie.movie_releaseyear,
+				am_movie.movie_releasemonth,
+				am_movie.movie_name,
+				am_schedule.schedule_begintime,
+				am_cinema.cinema_name,
+				am_hall.hall_name
+			FROM
+				am_schedule,
+				am_movie,
+				am_hall,
+				am_cinema
+			WHERE
+				am_schedule.schedule_movie_id = am_movie.movie_id
+			AND am_schedule.schedule_hall_id = am_hall.hall_id
+			AND am_hall.hall_cinema_id = am_cinema.cinema_id
+			AND am_schedule.schedule_id = #{id}
+		]]>
+	</select>
+	
+	<insert id="addOrder" parameterType="org.lanqiao.entity.AmOrder">
+		<![CDATA[
+			insert into am_order values(#{id},#{createtime},#{userid},#{code})
+		]]>
+	</insert>
+	<insert id="addSeat" parameterType="org.lanqiao.entity.AmSeat">
+		<![CDATA[
+			insert into am_seat VALUES(#{id},#{hallid},#{code},#{state},#{price})
+		]]>
+	</insert>
+	<select id="findHallIdByScheduleId" resultType="string" parameterType="string">
+		<![CDATA[
+			select am_schedule.schedule_hall_id
+			from am_schedule
+			where am_schedule.schedule_id=#{id}
+		]]>
+	</select>
+
+
+	<insert id="addDetail" parameterType="org.lanqiao.entity.AmDetail">
+		<![CDATA[
+			insert into am_detail values(#{id},#{orderid},#{scheduleid},#{seatid},#{price})
+		]]>
+	</insert>
+	
+		<select id="findUserByNameAndPass" resultMap="userMao" >
+			<![CDATA[
+				select 
+					* 
+				FROM
+					am_user
+				WHERE
+					am_user.user_name = #{0}
+				AND am_user.user_password = #{1}
+			]]>
+	</select>
+	
+	<resultMap type="org.lanqiao.entity.AmUser" id="userMao">
+		<id property="id" column="user_id"/>
+		<result property="name" column="user_name"/>
+		<result property="password" column="user_password"/>
+		<result property="email" column="user_email"/>
+		<result property="tel" column="user_tel"/>
+		<result property="isdelete" column="user_isdelete"/>
+		<result property="registtime" column="user_registtime"/>
+		<result property="imgurl" column="user_imgurl"/>
+	</resultMap>
+	
+		<select id="findConfirmBuyInfo" resultMap="confimInfoMap" parameterType="string">
+		<![CDATA[
+			SELECT
+				am_order.order_code,
+				am_detail.detail_schedule_id,
+				am_detail.detail_price,
+				am_hall.hall_name,
+				am_cinema.cinema_name,
+				am_schedule.schedule_begintime,
+				am_seat.seat_code,
+				am_movie.movie_name,
+				am_movie.movie_releaseyear,
+				am_movie.movie_releasemonth
+			FROM
+				am_order,
+				am_detail,
+				am_schedule,
+				am_hall,
+				am_cinema,
+				am_seat,
+				am_movie
+			WHERE
+				am_detail.detail_order_id = am_order.order_id
+			AND am_schedule.schedule_id = am_detail.detail_schedule_id
+			AND am_schedule.schedule_hall_id = am_hall.hall_id
+			AND am_cinema.cinema_id = am_hall.hall_cinema_id
+			AND am_detail.detail_seat_id = am_seat.seat_id
+			AND am_schedule.schedule_movie_id = am_movie.movie_id
+			AND am_order.order_code = #{value}
+		]]>
+	</select>
+	
+	<resultMap type="org.lanqiao.vo.ConfirmBuyInfo" id="confimInfoMap">
+		<result property="ticketCode" column="order_code"/>
+		<result property="codePrice" column="detail_price"/>
+		<result property="hallName" column="hall_name"/>
+		<result property="cinemaName" column="cinema_name"/>
+		<result property="beginTime" column="schedule_begintime"/>
+		<result property="seatCode" column="seat_code"/>
+		<result property="movieName" column="movie_name"/>
+		<result property="releaseYear" column="movie_releaseyear"/>
+		<result property="releaseMonth" column="movie_releasemonth"/>
+	</resultMap>
+
+
+</mapper>
+

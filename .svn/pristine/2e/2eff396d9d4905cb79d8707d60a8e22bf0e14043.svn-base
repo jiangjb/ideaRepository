@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="org.lanqiao.mapper.ScheduleManageAdminMapper">
+	<select id="findAllSchedule" resultType="hashmap">
+		<![CDATA[
+			SELECT
+				am_movie.movie_name,
+				am_schedule.schedule_date,
+				am_schedule.schedule_begintime,
+				am_cinema.cinema_name,
+				am_hall.hall_name,
+				am_city.city_name
+			FROM
+				am_schedule,
+				am_movie,
+				am_hall,
+				am_cinema,
+				am_city
+			WHERE
+				am_schedule.schedule_movie_id = am_movie.movie_id
+			AND am_hall.hall_id = am_schedule.schedule_hall_id
+			AND am_hall.hall_cinema_id = am_cinema.cinema_id
+			AND am_city.city_id = am_cinema.cinema_city_id
+		]]>
+	</select>
+	
+</mapper>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>爱.电影-success</title>
+<link rel="icon" href="${base.contextPath}/static/img/logoicon.png"/>
+<meta name="author" content="DeathGhost" />
+<style>
+body{height:100%;background:#16a085;overflow:hidden;}
+canvas{z-index:-1;position:absolute;}
+</style>
+
+</head>
+<body>
+	<h1 algin="center">成功！</h1>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="org.lanqiao.mapper.OrderManageAdminMapper">
+	<select id="selectAllOrder" resultType="hashmap">
+		<![CDATA[
+			SELECT
+				am_order.order_id,
+				am_user.user_name,
+				am_order.order_createtime,
+				am_order.order_code,
+				am_movie.movie_name,
+				am_cinema.cinema_name,
+				am_hall.hall_name,
+				am_seat.seat_code,
+				am_schedule.schedule_date,
+				am_schedule.schedule_begintime,
+				am_detail.detail_price
+			FROM
+				am_order,
+				am_user,
+				am_detail,
+				am_schedule,
+				am_seat,
+				am_hall,
+				am_cinema,
+				am_city,
+				am_movie
+			WHERE
+				am_detail.detail_order_id = am_order.order_id
+			AND am_order.order_user_id = am_user.user_id
+			AND am_detail.detail_schedule_id = am_schedule.schedule_id
+			AND am_detail.detail_seat_id = am_seat.seat_id
+			AND am_seat.seat_hall_id = am_hall.hall_id
+			AND am_hall.hall_cinema_id = am_cinema.cinema_id
+			AND am_cinema.cinema_city_id = am_city.city_id
+			AND am_schedule.schedule_movie_id = am_movie.movie_id
+			ORDER BY am_order.order_code
+		]]>
+	</select>
+	<delete id="deleteOrderByOrderId" parameterType="string">
+		<![CDATA[
+			DELETE am_order
+			FROM
+				am_detail,
+				am_order,
+				am_seat
+			WHERE
+				am_detail.detail_order_id = am_order.order_id
+			AND am_detail.detail_seat_id = am_seat.seat_id
+			AND am_order.order_id = #{orderId};
+		]]>
+	</delete>
+	<delete id="deleteOrders" parameterType="java.lang.String">
+		DELETE am_order
+			FROM
+				am_detail,
+				am_order,
+				am_seat
+			WHERE
+				am_detail.detail_order_id = am_order.order_id
+			AND am_detail.detail_seat_id = am_seat.seat_id
+			AND am_order.order_id in
+			<foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+	</delete>
+</mapper>

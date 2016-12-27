@@ -1,0 +1,16 @@
+package org.lanqiao.service;
+
+import java.util.HashMap;
+import java.util.List;
+
+/**
+ * 
+ * @ClassName ScheduleManageAdminService
+ * @Description TODO(这里用一句话描述这个类的作用)
+ * @author wangzhoucheng
+ * @Date 2016年12月8日 下午5:32:36
+ * @version 1.0.0
+ */
+public interface ScheduleManageAdminService {
+    public List<HashMap> findAllSchedule();
+}

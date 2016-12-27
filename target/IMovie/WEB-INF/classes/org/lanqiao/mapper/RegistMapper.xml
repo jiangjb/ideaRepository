@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="org.lanqiao.mapper.RegistMapper">
+	<insert id="addUser" parameterType="org.lanqiao.entity.AmUser">
+		<![CDATA[
+		 INSERT INTO am_user (
+			user_id,
+			user_name,
+			user_password,
+			user_email,
+			user_tel,
+			user_isdelete,
+			user_registtime,
+			user_imgurl
+		)
+		VALUES
+			(
+				#{id},
+				#{name},
+				#{password},
+				#{email},
+				#{tel},
+				#{isdelete},
+				#{registtime},
+				#{imgurl}
+			)
+		]]>
+	</insert>
+	<select id="selectUser" resultType="hashmap">
+		<![CDATA[
+			select * from am_user;
+		]]>
+	</select>
+</mapper>

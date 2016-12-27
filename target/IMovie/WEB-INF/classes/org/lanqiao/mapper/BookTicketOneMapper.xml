@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lanqiao.mapper.BookTicketOneMapper">
+
+
+	<select id="findNowSchedule" resultType="hashmap" >
+		<![CDATA[
+			SELECT
+				m.movie_name,
+				s.schedule_begintime,
+				c.cinema_name,
+				c.cinema_addr,
+				am_city.city_name,
+				s.schedule_id 
+			FROM
+				am_schedule s,
+				am_movie m,
+				am_hall h,
+				am_cinema c,
+				am_city
+			WHERE
+				(
+					m.movie_id = s.schedule_movie_id
+				)
+			AND (
+				s.schedule_hall_id = h.hall_id
+			)
+			AND (
+				h.hall_cinema_id = c.cinema_id
+			)
+			AND (
+				c.cinema_city_id = am_city.city_id
+			)
+			AND (
+				am_city.city_name = #{0}
+			)
+				AND (
+					m.movie_name = #{1}
+				)
+				AND (
+					s.schedule_date=#{2}
+				)
+				ORDER BY c.cinema_name,s.schedule_begintime
+		]]>
+	</select>
+	
+
+	
+	<select id="findAllcityNameByMid" resultType="hashmap" parameterType="string">
+		<![CDATA[
+			SELECT DISTINCT
+				am_city.city_name
+			FROM
+				am_schedule,
+				am_hall,
+				am_cinema,
+				am_city
+			WHERE
+				am_schedule.schedule_hall_id = am_hall.hall_id
+			AND am_hall.hall_cinema_id = am_cinema.cinema_id
+			AND am_cinema.cinema_city_id = am_city.city_id
+			AND am_schedule.schedule_movie_id = #{int}
+		]]>
+	</select>
+	<select id="findMovieNameAndDefaultCityByMovieId" resultType="hashmap" parameterType="string">
+	<![CDATA[
+		SELECT
+			am_movie.movie_name,
+			am_city.city_name
+		FROM
+			am_movie,
+			am_schedule,
+			am_hall,
+			am_cinema,
+			am_city
+		WHERE
+			am_schedule.schedule_movie_id = am_movie.movie_id
+		AND am_schedule.schedule_hall_id = am_hall.hall_id
+		AND am_hall.hall_cinema_id = am_cinema.cinema_id
+		AND am_cinema.cinema_id = am_city.city_id
+		AND am_movie.movie_id = #{id}
+		LIMIT 0,1
+	]]>
+	</select>
+	<select id="findMovieNameByMid" resultType="string" parameterType="string">
+	<![CDATA[
+		select am_movie.movie_name
+		from am_movie
+		where am_movie.movie_id=#{id}
+	]]>
+	</select>
+</mapper>
+

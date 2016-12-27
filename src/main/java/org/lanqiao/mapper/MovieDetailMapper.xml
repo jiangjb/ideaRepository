@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lanqiao.mapper.MovieDetailMapper">
+	<select id="selectMovieDetails" resultType="hashmap"  parameterType="string">
+		<![CDATA[
+			SELECT
+				movie_id,
+				movie_name,
+				movie_minute,
+				movie_country,
+				movie_category,
+				movie_releaseyear,
+				movie_releasemonth,
+				movie_director,
+				movie_actors,
+				movie_sales,
+				movie_plot,
+				movie_imgurl
+			FROM
+				am_movie
+			WHERE
+				movie_id = #{id}
+		]]>
+	</select>
+	<select id="selectCommentCount" resultType="int" parameterType="string">
+		<![CDATA[
+			SELECT
+				count(*)
+			FROM
+				am_comment,
+				am_movie
+			WHERE
+				am_comment.comment_movie_id = am_movie.movie_id
+			AND am_movie.movie_id = #{id}
+		]]> 
+	</select>
+	
+	<select id="selectMovieSchedule" resultType="hashmap" parameterType="string">
+		<![CDATA[
+			SELECT
+				city.city_name,
+				s.schedule_date,
+				c.cinema_name,
+				s.schedule_begintime
+			FROM
+				am_schedule s,
+				am_movie m,
+				am_hall h,
+				am_cinema c,
+				am_city city
+			WHERE
+				(
+					m.movie_id = s.schedule_movie_id
+				)
+			AND (
+				s.schedule_hall_id = h.hall_id
+			)
+			AND (
+				h.hall_cinema_id = c.cinema_id
+			)
+			AND (
+				c.cinema_city_id = city.city_id
+			)
+			AND m.movie_id = #{id}
+		]]>
+	</select>
+	
+	<select id="selectMovieComment" resultType="hashmap" parameterType="string">
+		<![CDATA[
+			SELECT
+				u.user_imgurl,
+				u.user_name,
+				co.comment_time,
+				co.comment_content
+			FROM
+				am_user u,
+				am_comment co,
+				am_movie m
+			WHERE
+				co.comment_movie_id = m.movie_id
+			AND co.comment_user_id = u.user_id
+			AND m.movie_id = #{id}
+			order by comment_time desc
+		]]>
+	</select>
+
+<select id="selectMovieImage" resultType="hashmap" parameterType="string">
+		<![CDATA[
+			SELECT
+				i.image_url
+			FROM
+				am_image i,
+				am_movie m
+			WHERE
+				i.image_movie_id = m.movie_id
+			AND m.movie_id = #{id}
+		]]> 
+	</select>
+	
+	<select id="selectImageCount" resultType="int" parameterType="string">
+		<![CDATA[
+			SELECT
+				count(*)
+			FROM
+				am_image i,
+				am_movie m
+			WHERE
+				i.image_movie_id = m.movie_id
+			AND m.movie_id = #{id}
+		]]> 
+	</select>
+	<insert id="addMovieComment" parameterType="org.lanqiao.entity.AmComment">
+		<![CDATA[
+			INSERT INTO am_comment (
+				comment_id,
+				comment_time,
+				comment_content,
+				comment_user_id,
+				comment_movie_id
+			)
+			VALUES
+				(#{id},#{time},#{content},#{userid},#{movieid})
+		]]> 
+	</insert>
+	
+	<select id="selectUser" resultMap="user">
+		<![CDATA[
+			SELECT * FROM am_user WHERE user_name = #{0} AND user_password = #{1}
+		]]> 
+	</select>
+	
+	<resultMap type="org.lanqiao.entity.AmUser" id="user">
+		<id property="id" column="user_id"/>
+		<result property="name" column="user_name"/>
+		<result property="password" column="user_password"/>
+		<result property="email" column="user_email"/>
+		<result property="tel" column="user_tel"/>
+		<result property="isdelete" column="user_isdelete"/>
+		<result property="registtime" column="user_registtime"/>
+		<result property="imgurl" column="user_imgurl"/>
+	</resultMap>
+	
+	
+	<select id="findCommentById" resultMap="commentMap" resultType="hashmap" parameterType="string">
+		<![CDATA[
+			SELECT
+				am_user.user_name,
+				am_user.user_imgurl,
+				am_comment.comment_content,
+				am_comment.comment_time
+			FROM
+				am_comment,
+				am_user
+			WHERE
+				am_user.user_id = am_comment.comment_user_id
+			AND am_comment.comment_id = #{id};
+		]]> 
+	</select>
+	<resultMap type="org.lanqiao.vo.CommentVo" id="commentMap">
+		<result property="username" column="user_name"/>
+		<result property="commenttime" column="comment_time"/>
+		<result property="content" column="comment_content"/>
+		<result property="imgurl" column="user_imgurl"/>
+	</resultMap>
+	
+	<select id="findVoteById" resultType="double"  parameterType="string">
+		<![CDATA[
+			SELECT
+				TRUNCATE (avg(vote_score), 1) AS avg_score
+			FROM
+				am_vote
+			where am_vote.vote_movie_id=#{id}
+			GROUP BY
+				am_vote.vote_movie_id
+		]]> 
+	</select>
+	
+</mapper>

@@ -1,0 +1,19 @@
+package org.lanqiao.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+
+import org.lanqiao.mapper.MovieManageAdminMapper;
+import org.lanqiao.service.MovieManageAdminService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+@Service
+public class MovieManageAdminServiceImpl implements MovieManageAdminService {
+	@Autowired
+	MovieManageAdminMapper 	movieManageAdminMapper;
+	public List<HashMap> selectAllMovie() {
+		List<HashMap> selectAllMovie = movieManageAdminMapper.selectAllMovie();
+		return selectAllMovie;
+	}
+
+}

@@ -1,0 +1,111 @@
+package org.lanqiao.controller;
+
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.lanqiao.service.BookTicketOneService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+/**
+ * 
+ * @ClassName BookTicketOneController
+ * @Description
+ * @author 韦荣恒
+ * @Date 2016年11月29日 上午9:50:32
+ * @version 1.0.0
+ */
+@Controller
+@RequestMapping("/book1")
+@SuppressWarnings("rawtypes")
+public class BookTicketOneController {
+	@Autowired
+	private BookTicketOneService bookTicketOneService;
+
+	/**
+	 * 通过电影名和所在城市查找相对应的电影院和场次
+	 */
+	@SuppressWarnings({ "unchecked" })
+	@RequestMapping("/FindNowSchedule")
+	public String findNowSchedule(Model model,String mid,String date) {
+	    List<HashMap> listM = bookTicketOneService.findMovieNameAndDefaultCityByMovieId(mid);
+	    String movieName = null;
+	    String cityName = null;
+	    int size = listM.size();
+	    if(listM.size()!=0 && listM!=null){
+	        Map map = listM.get(0);
+	        movieName=(String) map.get("movie_name");
+	        cityName=(String) map.get("city_name");
+	    }
+//先暂定一个默认的日期	    
+		//date="2016-11-29";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        date = sdf.format(new Date());
+		if(movieName!=null && cityName!=null){
+    		List<HashMap> list= bookTicketOneService.findNowSchedule(cityName,movieName,date);
+    		//截取时间的格式，只显示时分，不显示秒
+            for(int i=0;i<list.size();i++){
+                SimpleDateFormat format=new SimpleDateFormat("HH:mm");
+                String dateq = format.format(list.get(i).get("schedule_begintime"));
+                //System.out.println("dateq==="+dateq);
+                //把截取的时间再放回map集合中
+                ((HashMap)list.get(i)).put("schedule_begintime",dateq);
+            }
+    		model.addAttribute("list", list);
+		 }else{
+		     List listempty = new ArrayList();
+		     model.addAttribute("list", listempty);
+		 }
+		String mName = bookTicketOneService.findMovieNameByMid(mid);
+        model.addAttribute("mName", mName);
+		model.addAttribute("mid", mid);
+		return "frontpage/book1";
+	}
+	@ResponseBody
+	@RequestMapping("/findAllcityNameByMid")
+	public Object findAllcityNameByMid(Model model,String mid){
+		
+		List<HashMap> list=bookTicketOneService.findAllcityNameByMid(mid);
+		
+		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/FindNowSchedule2")
+	@ResponseBody
+	public Object findNowSchedule2(Model model,String params) throws UnsupportedEncodingException {
+	    if(params!=null){
+            params = java.net.URLDecoder.decode(params,"UTF-8");
+        }
+	    List<HashMap> list=null;
+	    if(params != null){
+	        String[] paramsArray = params.split(",");
+	        String movieName=paramsArray[0];
+	        String cityName=paramsArray[1];
+	        String date=paramsArray[2];
+	        String datesp[] = date.split("/");
+	        StringBuilder sb = new StringBuilder();
+	        sb.append(datesp[2]+"-").append(datesp[0]+"-").append(datesp[1]);
+	        String datedemo = sb.toString();
+	        list= bookTicketOneService.findNowSchedule(cityName,movieName,datedemo);
+	      //截取时间的格式，只显示时分，不显示秒
+            for(int i=0;i<list.size();i++){
+                SimpleDateFormat format=new SimpleDateFormat("HH:mm");
+                String dateq = format.format(list.get(i).get("schedule_begintime"));
+                //把截取的时间再放回map集合中
+                ((HashMap)list.get(i)).put("schedule_begintime",dateq);
+            }
+	    }
+			
+		return list;
+		
+	}
+}

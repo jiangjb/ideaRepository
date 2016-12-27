@@ -1,0 +1,175 @@
+package org.lanqiao.entity;
+
+/**
+ * 
+ * @ClassName AmMovie
+ * @Description TODO 电影对应的实体类
+ * @author wangzhoucheng
+ * @Date 2016年11月29日 下午3:16:52
+ * @version 1.0.0
+ */
+public class AmMovie {
+    private String id ;
+    private String name;
+    private String minute;
+    private String releaseyear;
+    private String releasemonth;
+    private String country;
+    private String category;
+    private String director;
+    private String actors;
+    private int sales;
+    private String plot;
+    private String video;
+    private int views;
+    private int sort;
+    private int isdisplay;
+    private String imgurl;
+    private String picture;
+    
+    public String getId() {
+        return id;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public String getMinute() {
+        return minute;
+    }
+    
+    public void setMinute(String minute) {
+        this.minute = minute;
+    }
+    
+    public String getReleaseyear() {
+        return releaseyear;
+    }
+    
+    public void setReleaseyear(String releaseyear) {
+        this.releaseyear = releaseyear;
+    }
+    
+    public String getReleasemonth() {
+        return releasemonth;
+    }
+    
+    public void setReleasemonth(String releasemonth) {
+        this.releasemonth = releasemonth;
+    }
+    
+    public String getCountry() {
+        return country;
+    }
+    
+    public void setCountry(String country) {
+        this.country = country;
+    }
+    
+    public String getCategory() {
+        return category;
+    }
+    
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    
+    public String getDirector() {
+        return director;
+    }
+    
+    public void setDirector(String director) {
+        this.director = director;
+    }
+    
+    public String getActors() {
+        return actors;
+    }
+    
+    public void setActors(String actors) {
+        this.actors = actors;
+    }
+    
+    public int getSales() {
+        return sales;
+    }
+    
+    public void setSales(int sales) {
+        this.sales = sales;
+    }
+    
+    public String getPlot() {
+        return plot;
+    }
+    
+    public void setPlot(String plot) {
+        this.plot = plot;
+    }
+    
+    public String getVideo() {
+        return video;
+    }
+    
+    public void setVideo(String video) {
+        this.video = video;
+    }
+    
+    public int getViews() {
+        return views;
+    }
+    
+    public void setViews(int views) {
+        this.views = views;
+    }
+    
+    public int getSort() {
+        return sort;
+    }
+    
+    public void setSort(int sort) {
+        this.sort = sort;
+    }
+    
+    public int getIsdisplay() {
+        return isdisplay;
+    }
+    
+    public void setIsdisplay(int isdisplay) {
+        this.isdisplay = isdisplay;
+    }
+    
+    public String getImgurl() {
+        return imgurl;
+    }
+    
+    public void setImgurl(String imgurl) {
+        this.imgurl = imgurl;
+    }
+    
+    public String getPicture() {
+        return picture;
+    }
+    
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    @Override
+    public String toString() {
+        return "AmMovie [id=" + id + ", name=" + name + ", minute=" + minute + ", releaseyear=" + releaseyear
+                + ", releasemonth=" + releasemonth + ", country=" + country + ", category=" + category + ", director="
+                + director + ", actors=" + actors + ", sales=" + sales + ", plot=" + plot + ", video=" + video
+                + ", views=" + views + ", sort=" + sort + ", isdisplay=" + isdisplay + ", imgurl=" + imgurl
+                + ", picture=" + picture + "]";
+    }
+    
+}

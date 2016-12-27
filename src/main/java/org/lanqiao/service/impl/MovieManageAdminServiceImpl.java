@@ -1,0 +1,42 @@
+package org.lanqiao.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+
+import org.lanqiao.entity.AmMovie;
+import org.lanqiao.mapper.MovieManageAdminMapper;
+import org.lanqiao.service.MovieManageAdminService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+@Service
+public class MovieManageAdminServiceImpl implements MovieManageAdminService {
+	@Autowired
+	MovieManageAdminMapper 	movieManageAdminMapper;
+	public List<HashMap> selectAllMovie() {
+		List<HashMap> selectAllMovie = movieManageAdminMapper.selectAllMovie();
+		return selectAllMovie;
+	}
+	public void deleteOneMovie(String movieId) {
+		movieManageAdminMapper.deleteOneMovie(movieId);
+	}
+	public void deleteSomeMovie(String[] movieIds) {
+		movieManageAdminMapper.deleteSomeMovie(movieIds);
+	}
+	public void addMovie(AmMovie amMovie) {
+		movieManageAdminMapper.addMovie(amMovie);
+		
+	}
+	public void updateMovie(AmMovie amMovie) {
+		movieManageAdminMapper.updateMovie(amMovie);
+		
+	}
+	public HashMap selectMovieByid(String id) {
+		HashMap selectMovieByid = movieManageAdminMapper.selectMovieByid(id);
+		return selectMovieByid;
+	}
+    public Integer findMovieCount() {
+        // TODO Auto-generated method stub
+        return movieManageAdminMapper.findMovieCount();
+    }
+
+}

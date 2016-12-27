@@ -1,0 +1,376 @@
+<!doctype html>
+<html>
+<head>
+	<!-- Basic Page Needs -->
+        <meta charset="utf-8">
+        <title>爱.电影 - 订票第一步</title>
+        <link rel="icon" href="${base.contextPath}/static/img/logoicon.png"/>
+        <meta name="description" content="A Template by Gozha.net">
+        <meta name="keywords" content="HTML, CSS, JavaScript">
+        <meta name="author" content="Gozha.net">
+    <!-- Mobile Specific Metas-->
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="telephone=no" name="format-detection">
+    	<!--awesome图标-->
+        <link href="${base.contextPath}/static/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+         <!--其他样式-->
+        <link href="${base.contextPath}/static/css/jquery-ui.css" rel="stylesheet">
+        <link href="${base.contextPath}/static/css/gozha-nav.css" rel="stylesheet" />
+        <!-- Select -->
+        <link href="${base.contextPath}/static/css/external/jquery.selectbox.css" rel="stylesheet" />
+        <!-- Swiper slider -->
+        <link href="${base.contextPath}/static/css/external/idangerous.swiper.css" rel="stylesheet" />
+         <!--主要样式-->
+         <link href="${base.contextPath}/static/css/style.css?v=1" rel="stylesheet" />
+         <link rel="stylesheet" type="text/css" href="${base.contextPath}/static/css/index.css"/>
+    	<!--脚本-->
+        <!-- Modernizr --> 
+        <script src="${base.contextPath}/static/js/external/modernizr.custom.js"></script>
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --> 
+    <!--[if lt IE 9]> 
+    	<script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script> 
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/respond.js/1.3.0/respond.js"></script>		
+    <![endif]-->
+    
+    <style type="text/css">
+    	.sbOptions option{
+    		color: #fff;
+    	}
+    	 #returnIndex:hover{
+			font-weight: bold;
+		}
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Banner 
+         <#include "/frontpage/header.ftl"/>-->
+        <#import "/frontpage/header.ftl" as headerPage>
+        <@headerPage.headers returnURL="/index/select" pid=-1/>
+        <!-- Search bar -->
+        <!-- Main content -->
+
+        <section class="container">
+            <div class="order-container">
+                <div class="order">
+                    <img class="order__images" alt='' src="${base.contextPath}/static/images/tickets.png">
+                    <p class="order__title">立即购票 <br><span class="order__descript">体验观影乐趣</span></p>
+                    <div class="order__control">
+                        <a href="#" class="order__control-btn active">购票</a>
+                      <#--<a href="#" class="order__control-btn">预定</a>-->  
+                    </div>
+                </div>
+            </div>
+                <div class="order-step-area">
+                    <div class="order-step first--step">1.选择影院，场次</div>
+                </div>
+
+            <!--<h2 class="page-heading heading--outcontainer">选择影片</h2>-->
+        </section>
+        
+        <div class="choose-film">
+            <div class="swiper-container">
+              <div class="swiper-wrapper">
+                  <!--<div class="swiper-slide" data-film='三少爷的剑'> 
+                        <div class="film-images">
+                            <img alt='' src="images/ssydj.jpg">
+                        </div>
+                        <p class="choose-film__title">三少爷的剑</p>
+                  </div>-->
+              </div>
+            </div>
+        </div>
+
+        <section class="container">
+            <div class="col-sm-12">
+                <!--<div class="choose-indector choose-indector--film">
+                    <strong>已选择: </strong><span class="choosen-area"></span>
+                </div>-->
+
+                <h2 class="page-heading">城市  日期</h2>
+
+                <div class="choose-container choose-container--short">
+                   	<form id='select' class="select" method='get'>
+                          <select name="select-item" id="select-sort" class="select__sort" tabindex="0">
+                          	<option value="1" selected='selected'>北京</option>
+                        </select>
+                    </form>
+					
+                    <div class="datepicker">
+                      <span class="datepicker__marker" name="date"><i class="fa fa-calendar"></i>日期</span>
+                      <input type="text" id="datepicker" value='12/09/2016' class="datepicker__input">
+                    </div>
+                </div>
+
+                <h2 class="page-heading">选择时间</h2>
+				
+                <div class="time-select time-select--wide  qqqq">
+                	<#if list?size==0>
+                		<h1 style="display: inline-block;">该影片已没有上映场次,请重新选择</h1>
+                		<a id="returnIndex" href="${base.contextPath}/index/select" style="color: #4c4145;text-decoration: underline;font-size: 27px">点击返回首页</a>
+                	<#else>
+                        <#list list as lis>
+	                		<#if lis_index==0||lis_index!=0&&list[lis_index].cinema_name!=list[lis_index-1].cinema_name>
+		                        <div  class="time-select__group group--first  wwww" >
+		                            <div class="col-sm-3">
+		                                <p class="time-select__place">${lis.cinema_name}</p>
+		                            </div>
+		                            <ul class="col-sm-6 items-wrap">
+		                            	<#assign cinemaname=lis.cinema_name>
+			                          	<#list list as lis>
+				                           	<#if list[lis_index].cinema_name==cinemaname>
+				                                <li class="time-select__item" data-sid="${lis.schedule_id}" data-time=${lis.schedule_begintime}>${lis.schedule_begintime}</li>
+				                            </#if>
+			                            </#list>
+		                            </ul>
+		                        </div>
+							</#if>
+						</#list>
+                     </#if>
+                       
+                    </div>
+					<#if list?size==0>
+	                <#else>
+	                	<div class="choose-indector choose-indector--time">
+                    		<strong>已选择: </strong><span class="choosen-area"></span>
+                		</div>
+	                </#if>
+                
+            </div>
+
+        </section>
+
+        <div class="clearfix"></div>
+
+        <form id='film-and-time' class="booking-form" method='get' action='book2.ftl'>
+            <input type='text' name='choosen-movie' class="choosen-movie">
+
+            <input type='text' name='choosen-city' class="choosen-city">
+            <input type='text' name='choosen-date' class="choosen-date">
+            
+            <input type='text' name='choosen-cinema' class="choosen-cinema">
+            <input type='text' name='choosen-time' class="choosen-time">
+        
+
+            <div class="booking-pagination">
+                    <a href="#" class="booking-pagination__prev hide--arrow">
+                        <span class="arrow__text arrow--prev"></span>
+                        <span class="arrow__info"></span>
+                    </a>
+                    <a href="javascript:void(0)" id="select_next" onclick="selectNext()" class="booking-pagination__next">
+                        <span class="arrow__text arrow--next">下一步</span>
+                        <span class="arrow__info">选择座位</span>
+                    </a>
+            </div>
+
+        </form>
+        
+        <footer class="footer-wrapper">
+            <section class="container">
+                    <div class="footer-info">
+                        <<div class="copy-bottom">
+			        	<p class="copy"> 版权所有：爱电影文化传媒工作室  Done by KO Studio</p>
+			            <p class="copy"> Copyright&copy; AMovie.com 2016. All rights reserved.</p>
+			        </div>
+            </section>
+        </footer>
+    	</div>
+
+	<!-- JavaScript-->
+        <!-- jQuery 1.9.1--> 
+        <script src="${base.contextPath}/static/js/external/jquery-1.10.1.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/external/jquery-1.10.1.min.js"><\/script>')</script>
+        <!-- Migrate --> 
+        <script src="${base.contextPath}/static/js/external/jquery-migrate-1.2.1.min.js"></script>
+        <!-- jQuery UI -->
+        <script src="${base.contextPath}/static/js/jquery-ui.js"></script>
+        <!-- Bootstrap 3--> 
+        <script src="${base.contextPath}/static/js/bootstrap.min.js"></script>
+
+        <!-- Mobile menu -->
+        <script src="${base.contextPath}/static/js/jquery.mobile.menu.js"></script>
+         <!-- Select -->
+        <script src="${base.contextPath}/static/js/external/jquery.selectbox-0.2.min.js"></script>
+        <!-- Swiper slider -->
+        <script src="${base.contextPath}/static/js/external/idangerous.swiper.min.js"></script>
+
+        <!-- Form element -->
+        <script src="${base.contextPath}/static/js/external/form-element.js"></script>
+        <!-- Form validation -->
+        <script src="${base.contextPath}/static/js/form.js"></script>
+
+        <!-- Custom -->
+        <script src="${base.contextPath}/static/js/custom.js"></script>
+		
+		<script type="text/javascript">
+			
+		
+            $(document).ready(function() {
+                init_BookingOne();
+               // alert($('#datepicker').val())
+                <#-- 动态添加select城市的选项 -->
+					$.ajax({
+						type: "get",
+						url: "${base.contextPath}/book1/findAllcityNameByMid?mid=${mid}",
+						dataType: "json",
+						success: function(list) {
+							var html="";
+							for(var i = 0; i < list.length; i++) {
+								if(i == 0){
+									html += "<li><a class='sbFocus' href='#" + (i + 1)+ "' rel='"+ (i+1) +"'>"+list[i].city_name+"</a></li>";
+								}else{
+									html += "<li><a href='#" + (i + 1)+ "' rel='"+ (i+1) +"'>"+list[i].city_name+"</a></li>";
+								}
+							}
+							$(".sbOptions").html(html);
+						}
+					});
+				
+				//选择时间后的
+			    $('#datepicker').on("change",function(){
+			   		var cityName = $(".sbSelector").text();
+	           		var movieName = "${mName}";
+	           		var nowdate=$('#datepicker').val();
+	           		var params=movieName+","+cityName+","+nowdate;
+	           		 $.ajax({
+						type: "get",
+						contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+						url: "${base.contextPath}/book1/FindNowSchedule2",
+						dataType: "json",
+						data:{"params":encodeURI(params)},   //提交到后台的数据
+						success: function(list) {
+							if(list.length!=0){
+								$('#select_next').show();
+								$(".wwww").remove();
+								var cinemaName="";
+								var cinemaName2="";
+								var html="";
+								var html2="";
+								var html3="";
+								for(var i = 0; i < list.length; i++) {  
+									
+									if((i == 0)||((i!=0)&&((list[i].cinema_name)!=(cinemaName)))){
+										cinemaName=list[i].cinema_name;
+										html = '<div class="time-select__group group--first  wwww"><div class="col-sm-3"><p class="time-select__place">'+list[i].cinema_name+'</p></div><ul id="'+i+'" class="col-sm-6 items-wrap"></ul></div>'
+										$(".qqqq").append(html);
+										
+										for(var j = 0; j < list.length; j++) { 
+										   if(((j == 0)&&(list[j].cinema_name==cinemaName))||((j!=0)&&(list[j].cinema_name==cinemaName))){
+										   		html2 = '<li class="time-select__item" data-sid="'+list[j].schedule_id+'" data-time="'+list[j].schedule_begintime+'">'+list[j].schedule_begintime+'</li>';
+													$("#"+i).append(html2);
+										 	}
+										}
+									}
+								}
+							}else{
+								$(".wwww").remove();
+								alert("该城市该时间无放映场次，请重新选择!")
+								$('#select_next').hide();
+							}
+							//点击时间后的
+							 $('.time-select__item').click(function (){
+			                	//visual iteractive for choose
+			                    $('.time-select__item').removeClass('active');
+			                    $(this).addClass('active');
+			
+			                    //data element init
+			                    var chooseTime = $(this).attr('data-time');
+			                     $('.choose-indector--time').find('.choosen-area').text(chooseTime);
+			
+			                    //data element init
+			                    var chooseCinema = $(this).parent().parent().find('.time-select__place').text(); 
+			
+			                    //data element set
+			                    time.val(chooseTime);
+			                    cinema.val(chooseCinema);
+			                });
+						}
+					});
+			    })
+
+	           $(".sbOptions").on("click","li",function(){
+	           		$(".sbSelector").text($(this).find("a").text());
+	           		$(".sbOptions").slideToggle(500);
+	           		var cityName = $(".sbSelector").text();
+	           		var movieName = "${mName}";
+	           		var nowdate=$('#datepicker').val();
+	           		var params=movieName+","+cityName+","+nowdate;
+	           		 $.ajax({
+						type: "get",
+						contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+						url: "${base.contextPath}/book1/FindNowSchedule2",
+						dataType: "json",
+						data:{"params":encodeURI(params)},   //提交到后台的数据
+						success: function(list) {
+						
+							if(list.length!=0){
+								$('#select_next').show();
+								$(".wwww").remove();
+								var cinemaName="";
+								var cinemaName2="";
+								var html="";
+								var html2="";
+								var html3="";
+								for(var i = 0; i < list.length; i++) {  
+									
+									if((i == 0)||((i!=0)&&((list[i].cinema_name)!=(cinemaName)))){
+										cinemaName=list[i].cinema_name;
+										html = '<div class="time-select__group group--first  wwww"><div class="col-sm-3"><p class="time-select__place">'+list[i].cinema_name+'</p></div><ul id="'+i+'" class="col-sm-6 items-wrap"></ul></div>'
+										$(".qqqq").append(html);
+										
+										for(var j = 0; j < list.length; j++) { 
+										   if(((j == 0)&&(list[j].cinema_name==cinemaName))||((j!=0)&&(list[j].cinema_name==cinemaName))){
+										   		html2 = '<li class="time-select__item" data-sid="'+list[j].schedule_id+'" data-time="'+list[j].schedule_begintime+'">'+list[j].schedule_begintime+'</li>';
+													$("#"+i).append(html2);
+										 	}
+										}
+									}
+								}
+							}else{
+								$(".wwww").remove();
+								alert("该城市该时间无放映场次，请重新选择!")
+								$('#select_next').hide();
+							}
+							//点击时间后的
+							 $('.time-select__item').click(function (){
+			                	//visual iteractive for choose
+			                    $('.time-select__item').removeClass('active');
+			                    $(this).addClass('active');
+			
+			                    //data element init
+			                    var chooseTime = $(this).attr('data-time');
+			                     $('.choose-indector--time').find('.choosen-area').text(chooseTime);
+			
+			                    //data element init
+			                    var chooseCinema = $(this).parent().parent().find('.time-select__place').text(); 
+			
+			                    //data element set
+			                    time.val(chooseTime);
+			                    cinema.val(chooseCinema);
+			                });me
+						}
+					});
+	           });
+                
+            });
+            
+		</script>
+		
+		<script type="text/javascript">
+			//点击下一步,选择座位
+			function selectNext(){
+				var sid = $('li.active').attr('data-sid');
+				if(sid==undefined){
+					alert("请选择场次！");
+				}else{
+					window.location.href="/IMovie/BookTwo/findAllSeatByScheduleId?sid="+sid;
+				}
+			}
+			
+			
+		</script>
+
+</body>
+</html>

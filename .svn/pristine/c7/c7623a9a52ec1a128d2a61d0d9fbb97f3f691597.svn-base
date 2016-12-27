@@ -1,0 +1,65 @@
+package org.lanqiao.controller;
+
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.lanqiao.service.UserManageAdminService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+/**
+ * 
+ * @author 锟斤拷锟揭憋拷
+ * @锟斤拷锟斤拷 实锟街讹拷锟矫伙拷锟侥诧拷锟斤拷
+ * @Date 2016-12-6 
+ *
+ */
+@Controller
+public class UserManageAdminController {
+	@Autowired
+	UserManageAdminService userManageAdminService;
+	@RequestMapping("userManageAdminController/delete")
+	@ResponseBody
+	public void delete(String userid){
+		userManageAdminService.deleteUser(userid);
+	}
+	@SuppressWarnings("rawtypes")
+	@RequestMapping("userManageAdminController/show")
+	public Object selectAll(HttpServletRequest request){
+		List<HashMap> list = userManageAdminService.selectAllUser();
+		System.out.println(list);
+		request.setAttribute("list", list);
+		return "backpage/admin-role";
+	}
+	@RequestMapping("userManageAdminController/numshow")
+	public String showNum(HttpServletRequest request){
+		String list=userManageAdminService.showNumber();
+		request.setAttribute("list", list);
+		return "backpage/chartZXT";
+	}
+	@RequestMapping("userManageAdminController/update")
+	public Object updatauser(@RequestParam("user_id")String user_id,@RequestParam("user_name")String user_name, @RequestParam("user_tel")String user_tel,
+			@RequestParam("user_email")String user_email){
+		userManageAdminService.updateUserInfo(user_name, user_tel, user_email,user_id);
+		return "redirect:/userManageAdminController/show";
+	}
+	@RequestMapping("userManageAdminController/edit")
+	public Object show(HttpServletRequest request,@RequestParam("user_id")String user_id,@RequestParam("user_name")String user_name,@RequestParam("user_tel")String user_tel,@RequestParam("user_email")String user_email){
+		request.setAttribute("user_id", user_id);
+		request.setAttribute("user_name", user_name);
+		request.setAttribute("user_tel", user_tel);
+		request.setAttribute("user_email", user_email);
+		return "backpage/admin-role-edit";
+	}
+	@RequestMapping("userManageAdminController/search")
+	@ResponseBody
+	public String findUser(@RequestParam("username") String username){
+		String list=userManageAdminService.findUserBN(username);
+		return list;
+	}
+	
+}

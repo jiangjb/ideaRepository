@@ -1,0 +1,30 @@
+package org.lanqiao.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+
+import org.lanqiao.mapper.ScheduleManageAdminMapper;
+import org.lanqiao.service.ScheduleManageAdminService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/**
+ * 
+ * @ClassName ScheduleManageAdminServiceImpl
+ * @Description TODO(这里用一句话描述这个类的作用)
+ * @author wangzhoucheng
+ * @Date 2016年12月8日 下午5:33:08
+ * @version 1.0.0
+ */
+@Service
+public class ScheduleManageAdminServiceImpl implements ScheduleManageAdminService {
+
+    @Autowired
+    ScheduleManageAdminMapper scheduleManageAdminMapper;
+    
+    public List<HashMap> findAllSchedule() {
+        // TODO Auto-generated method stub
+        return scheduleManageAdminMapper.findAllSchedule();
+    }
+
+}

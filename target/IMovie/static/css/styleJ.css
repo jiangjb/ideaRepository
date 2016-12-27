@@ -1,0 +1,112 @@
+/*   ----------------------MovieListFull--------------------------- */
+.movie_rating {
+  width: 47px;
+  height: 47px;
+  padding-top: 10px;
+  -webkit-border-radius: 24px;
+  -moz-border-radius: 24px;
+  border-radius: 24px;
+  background-color: #ffd564;
+  border: solid 3px #fff;
+  font: 16px 'Roboto', sans-serif;
+  color: #4c4145;
+  text-align: center;
+  font-weight: bold;
+  position: absolute;
+  top: 6px;
+  left: 6px;
+}
+
+.movie_rating {
+  font-size: 16pt;
+  filter: Glow(color=#000000,strength=2); 
+  color: #223333;
+   height: 9pt
+  width: 47px;
+ /*  height: 47px; */
+  padding-top: 10px;
+  -webkit-border-radius: 24px;
+  -moz-border-radius: 24px;
+  border-radius: 24px;
+  background-color: #ffd564;
+  border: solid 3px #fff;
+  /* font: 16px 'Roboto', sans-serif;
+  color: #4c4145; */
+  text-align: center;
+  font-weight: bold;
+  position: absolute;
+  top: 6px;
+  left: 20px;
+}
+  .movie_rating {
+    left: 150px;
+  }
+  
+.pagination {
+  margin-top:60px;
+  padding-right: 30px;
+  display: block;
+}
+ .pagination__prev {
+  font: 13px 'aleoregular', sans-serif;
+  color: #4c4145;
+  float: left;
+  text-transform: uppercase;
+  display: inline-block;
+  padding: 8px 0 9px 43px;
+  margin-left: -8px;
+  background-image: url(../images/icons/left-arrow-dark.svg);
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+ .pagination__prev:hover {
+  color: #fe505a;
+  background-image: url(../images/icons/left-arrow-danger.svg);
+  background-position: 0 50%;
+}
+ .pagination__next {
+  font: 13px 'aleoregular', sans-serif;
+  color: #4c4145;
+  text-transform: uppercase;
+  float: right;
+  display: inline-block;
+  padding: 8px 43px 9px 0;
+  margin-right: -8px;
+  background-image: url(../images/icons/right-arrow-dark.svg);
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+ .pagination__next:hover {
+  color: #fe505a;
+  background-image: url(../images/icons/right-arrow-danger.svg);
+}
+
+.pagination__first{
+	font-family:"楷体"; 
+	font-size:18px;
+}
+.pagination__next{
+	font-family:"楷体"; 
+	font-size:18px;
+}
+
+.movie__rate-number {
+  margin-top:10px;
+  color:teal;
+  font-weight:bold;
+  font: 12px 'Roboto', sans-serif;
+  display: block;
+}
+
+.movie__option {
+    line-height: 13px;
+  }
+  
+  .movie__option {
+  font-size: 16px;
+  margin-bottom: 3px;
+}
+
+.movie__option {
+  line-height: 25px;
+}

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="org.lanqiao.mapper.CinemaAdminMapper">
+  <!-- 添加 -->
+  <insert id="addCinema" parameterType="org.lanqiao.entity.AmCinema">
+		<![CDATA[
+			INSERT INTO am_cinema (
+	cinema_id,
+	cinema_vote,
+	cinema_sort,
+	cinema_isdisplay,
+	cinema_city_id,
+	cinema_name,
+	cinema_addr
+)
+VALUES
+	(#{id},#{vote},#{sort},#{isdisplay},#{cityid},#{name},#{addr})
+		]]> 
+	</insert>
+	<!-- 展示-->
+	<select id="selectCinema" resultType="hashmap">
+		<![CDATA[
+			SELECT
+	c.cinema_id,
+	c.cinema_vote,
+	c.cinema_sort,
+	c.cinema_isdisplay,
+	city.city_name,
+	c.cinema_name,
+	c.cinema_addr
+FROM
+	am_cinema c,
+	am_city city
+WHERE city.city_id = c.cinema_city_id
+		]]> 
+	</select>
+	<select id="selectCinemaCount" resultType="int">
+		<![CDATA[
+			SELECT
+	COUNT(*)
+FROM
+	am_cinema
+		]]> 
+	</select>
+	<!-- 删除 -->
+	<delete id="deleteCinema" parameterType="string">
+	<![CDATA[
+		delete from am_cinema where cinema_id = #{cid}
+		]]>
+	</delete>
+	<!-- 备份 -->
+	<insert id="backupCinema" parameterType="string">
+	<![CDATA[
+		insert into am_cinema_back select * from am_cinema where cinema_id = #{cid}
+		]]>	
+	</insert>
+	<!-- 展示已删除的影院-->
+	<select id="selectBackCinema" resultType="hashmap">
+		<![CDATA[
+		SELECT
+	c.cinema_id,
+	c.cinema_vote,
+	c.cinema_sort,
+	c.cinema_isdisplay,
+	city.city_name,
+	c.cinema_name,
+	c.cinema_addr
+FROM
+	am_cinema_back c,
+	am_city city
+WHERE city.city_id = c.cinema_city_id
+		]]> 
+	</select>
+	<!-- 查找影院-->
+	<select id="findCinema" resultType="hashmap" parameterType="map">
+		SELECT
+	c.cinema_id,
+	c.cinema_vote,
+	c.cinema_sort,
+	c.cinema_isdisplay,
+	city.city_name,
+	c.cinema_name,
+	c.cinema_addr
+FROM
+	am_cinema c,
+	am_city city
+			<where>
+			city.city_id = c.cinema_city_id
+				<if test="cinemaname != null ">
+			       <!--  post_title like '%' #{title} '%' -->
+			        AND c.cinema_name like '%${cinemaname}%'
+			    </if> 
+			    <if test="cityname != null">
+			        AND city.city_name like '%${cityname}%'
+			    </if>
+			</where>
+	</select>
+	<!-- 修改影院信息-->
+	<update id="updateCinema" parameterType="org.lanqiao.entity.AmCinema">
+		<![CDATA[
+			UPDATE am_cinema
+SET cinema_vote = #{vote},
+ cinema_sort = #{sort},
+ cinema_isdisplay = #{isdisplay},
+ cinema_city_id = #{cityid},
+ cinema_name = #{name},
+ cinema_addr = #{addr}
+WHERE
+	cinema_id = #{id}
+		]]> 
+	</update>
+	
+	<insert id="addDefaultHall" parameterType="org.lanqiao.entity.AmHall">
+		insert into am_hall VALUES(#{id},#{cinemaid},#{hallname})
+	</insert>
+</mapper>

@@ -1,0 +1,236 @@
+package org.lanqiao.controller;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.lanqiao.entity.AmUser;
+import org.lanqiao.service.RegistService;
+import org.lanqiao.util.StringUtils;
+import org.lanqiao.util.UUIDBuild;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.taobao.api.ApiException;
+import com.taobao.api.DefaultTaobaoClient;
+import com.taobao.api.TaobaoClient;
+import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
+import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
+
+@Controller
+@RequestMapping("/regist")
+public class RegistController {
+	@Autowired
+	RegistService RegistService;
+	
+	private UUIDBuild UUIDBuild;
+	/**
+	 * 注册
+	 * @param user
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/add",method=RequestMethod.POST)
+	public String regist(AmUser user,HttpServletRequest request){
+		String id = UUIDBuild.getUUID();
+		user.setId(id);
+		user.setRegisttime(new Date());
+		String imgurl = user.getImgurl();
+		if("".equals(imgurl)){
+		    user.setImgurl("uploadimages/userImg/default.jpg");
+		}
+		System.out.println(user);
+		RegistService.addUser(user);
+		return "redirect:/pages/frontpage/login";
+	}
+//	上传图片
+	@RequestMapping(value="/upload",method=RequestMethod.POST)
+	@ResponseBody
+	public Object upload(@RequestParam MultipartFile[] uploadFile,HttpServletRequest request){
+		String webPath = request.getServletContext().getRealPath("/");
+		File file = new File(webPath+"/uploadimages/userImg/");
+		if(!file.exists()){
+			file.mkdir();
+		}
+		String imgUrl = null;
+		for (int i = 0; i < uploadFile.length; i++) {
+			String fileName = uploadFile[i].getOriginalFilename();//获取上传文件的原名
+			String postfix  = fileName.substring(fileName.lastIndexOf("."));
+			fileName = getTimeStamp()+postfix;
+			imgUrl ="uploadimages/userImg/"+ fileName;
+			File imgFile = new File(webPath + "/"+imgUrl);
+			try {
+				uploadFile[i].transferTo(imgFile);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return imgUrl;
+	}
+//	获取时间搓
+	public String getTimeStamp(){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		String date = sdf.format(new Date());
+		return date;
+	}
+	
+	/**
+	 * 
+	 * @param tel 前台输入的手机号
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/sendMess")
+	@ResponseBody
+	public Object sendMess(String tel,HttpSession session){
+		String url = "	http://gw.api.taobao.com/router/rest";
+		String appkey ="23555932";
+		String secret ="c0e831871ac4921e8da9b67e32f34980";
+		TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
+		AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
+		req.setExtend("123456");
+		req.setSmsType("normal");
+		req.setSmsFreeSignName("爱电影");
+		String code = StringUtils.getNum(4);//获取随机验证码
+		
+		session.setAttribute("num", code);
+		session.setMaxInactiveInterval(1000*60);
+		
+		req.setSmsParamString("{\"code\":\""+code+"\",\"product\":\"AMovie\"}");
+		req.setRecNum(tel);
+		req.setSmsTemplateCode("SMS_33240236");//SMS_33270180
+		AlibabaAliqinFcSmsNumSendResponse rsp = null;
+		try {
+			rsp = client.execute(req);
+			System.out.println(rsp.getBody());
+		} catch (ApiException e) {
+			e.printStackTrace();
+		}
+		//{"alibaba_aliqin_fc_sms_num_send_response":{"result":{"err_code":"0","model":"104890629580^1106731077604","success":true},"request_id":"z25tdelklg71"}}
+		//{"error_response":{"code":15,"msg":"Remote service error","sub_code":"isv.SMS_TEMPLATE_ILLEGAL","sub_msg":"短信模板不合法","request_id":"qm53ngvdpryk"}}
+		return code;
+		
+	}
+	/**
+	 * 验证用户名
+	 * @param param
+	 * @return
+	 */
+	@RequestMapping(value = "/checkName", method = RequestMethod.POST)
+	@ResponseBody
+	public Object checkName(String param){
+		List<HashMap> listUser = RegistService.selectUser();
+		String text = "";
+		Map<String, String> map = new HashMap<String, String>();
+		for (HashMap hashMap : listUser) {
+			String  name = (String) hashMap.get("user_name");
+			if(param.equals(name)){
+				text = "existed";
+				break;
+			}else{
+				text = "unexisted";
+			}
+		}
+		if(text.equals("existed")){
+			map.put("status", "n");
+			map.put("info", "该用户名已注册！");
+		}else{
+			map.put("status", "y");
+			map.put("info", "该用户名可以注册！");
+		}
+		return map;
+	}
+	/**
+	 * 验证邮箱
+	 * @param param
+	 * @return
+	 */
+	@RequestMapping(value = "/checkEmail", method = RequestMethod.POST)
+	@ResponseBody
+	public Object checkEmail(String param){
+		List<HashMap> listUser = RegistService.selectUser();
+		String text = "";
+		Map<String, String> map = new HashMap<String, String>();
+		for (HashMap hashMap : listUser) {
+			String  email = (String) hashMap.get("user_email");
+			if(param.equals(email)){
+				text = "existed";
+				break;
+			}else{
+				text = "unexisted";
+			}
+		}
+		if(text.equals("existed")){
+			map.put("status", "n");
+			map.put("info", "该邮箱已注册！");
+		}else{
+			map.put("status", "y");
+			map.put("info", "该邮箱可以注册！");
+		}
+		return map;
+	}
+	/**
+	 * 验证邮箱
+	 * @param param
+	 * @return
+	 */
+	@RequestMapping(value = "/checkTel", method = RequestMethod.POST)
+	@ResponseBody
+	public Object checkTel(String param){
+		List<HashMap> listUser = RegistService.selectUser();
+		String text = "";
+		Map<String, String> map = new HashMap<String, String>();
+		for (HashMap hashMap : listUser) {
+			String  tel = (String) hashMap.get("user_tel");
+			if(param.equals(tel)){
+				text = "existed";
+				break;
+			}else{
+				text = "unexisted";
+			}
+		}
+		if(text.equals("existed")){
+			map.put("status", "n");
+			map.put("info", "该手机号已注册！");
+		}else{
+			map.put("status", "y");
+			map.put("info", "该手机可以注册！");
+		}
+		return map;
+	}
+	
+	/**
+	 *	验证码验证
+	 * @return
+	 */
+	@RequestMapping(value = "/checkCode", method = RequestMethod.POST)
+	@ResponseBody
+	public Object checkCode(String param,HttpSession session){
+		String  code = (String) session.getAttribute("num");
+		String text = "";
+		Map<String, String> map = new HashMap<String, String>();
+		if (code.equals(param)) {
+			map.put("status", "y");
+			map.put("info", "验证码正确！");
+		} else {
+			map.put("status", "n");
+			map.put("info", "验证码错误！");
+		}
+		System.out.println(map);
+		return map;
+	}
+}

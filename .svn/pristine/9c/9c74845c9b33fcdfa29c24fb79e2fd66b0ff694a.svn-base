@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:mvc="http://www.springframework.org/schema/mvc"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+
+			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/tx
+			http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/mvc
+			http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+			
+		<!-- @Controller扫描 -->
+		<context:component-scan base-package="org.lanqiao.controller"></context:component-scan>
+		
+		<!-- 默认的注解映射的支持，如果配置了上面一步Controller扫描的话可以不用配置也可以不用配置，但还是配上 -->
+		<mvc:annotation-driven/>
+		<!-- 注解扫描 -->
+		
+		<!-- freemarker的一些配置 -->
+		<bean id="freemarkerConfigurer"  class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+			<property name="templateLoaderPath"  value="/WEB-INF/pages/"></property>
+			<property name="freemarkerSettings">
+				<props>  
+		            <prop key="template_update_delay">0</prop>  
+		            <prop key="default_encoding">utf-8</prop>  
+		            <prop key="number_format">0.##</prop>  
+		            <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>  
+		            <prop key="classic_compatible">true</prop>
+        		</props>  
+			</property>
+		</bean>
+		<bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+			<property name="suffix"  value=".ftl"></property>
+			<property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"></property>
+			<property name="contentType"  value="text/html;charset=utf-8"></property>
+			<!-- 配置了在页面中就可以使用，功能类似jsp的request -->
+			<property name="requestContextAttribute" value="base"></property>
+		</bean>
+		
+		<!-- 配置访问静态资源，因为DispatcherServlet配置的url为 "/" 所以js、cs、图片等资源默认都访问不到了
+			 一下几种访问可以配置
+			   ◇ 方案一：激活 Tomcat 的 defaultServlet 来处理静态资源
+			   ◇ 方案二：Spring 3.0.4 以后版本提供了 <mvc:resources /> 
+			   ◇ 方案三：使用 <mvc:default-servlet-handler />
+		 -->
+		 <mvc:default-servlet-handler/> 
+		<!-- <mvc:resources location="/static/image/" mapping="/static/image/**"/>
+		<mvc:resources location="/static/css/" mapping="/static/css/**"/>
+		<mvc:resources location="/static/js/" mapping="/static/js/**"/> -->
+		
+	 <!-- 上传配置 -->
+	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+			<property value="utf-8" name="defaultEncoding"/>
+			<property value="10485760000" name="maxUploadSize"/>
+			<property value="40960" name="maxInMemorySize"/>
+	</bean>
+	
+	
+<!-- 			<mvc:mapping path="/pages/frontpage/book1"/>  -->
+<!-- 			<mvc:mapping path="/pages/frontpage/book2"/>  -->
+<!-- 			<mvc:mapping path="/pages/frontpage/book3-buy"/>  -->
+<!-- 			<mvc:mapping path="/pages/frontpage/center"/>  -->
+<!-- 			<mvc:mapping path="/pages/frontpage/book-final"/>  -->
+<!-- 			<mvc:mapping path="/pages/frontpage/movie-list-full"/>  -->
+<!-- 			<mvc:mapping path="/pages/frontpage/movie-page-full"/>  -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!--  匹配的都是逻辑视图  -->
+			<mvc:mapping path="/book1/*"/> 
+			<mvc:mapping path="/BookTwo/*"/> 
+			<mvc:mapping path="/pages/frontpage/index"/> 
+			<bean id="loginInter" class="org.lanqiao.interceptor.LoginInteceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+</beans>
+
+

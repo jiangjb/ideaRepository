@@ -1,0 +1,23 @@
+package org.lanqiao.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * 
+ * @ClassName ScheduleManageAdminController
+ * @Description 片场管理
+ * @author wangzhoucheng
+ * @Date 2016年12月8日 上午9:46:13
+ * @version 1.0.0
+ */
+@Controller
+@RequestMapping("/schedule")
+public class ScheduleManageAdminController {
+
+    @RequestMapping("/select")
+    public String selectAllSchedule(){
+        
+        return "/backpage/schedule-list";
+    }
+}
