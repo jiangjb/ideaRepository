@@ -36,7 +36,9 @@ public class BookTicketOneController {
 	@SuppressWarnings({ "unchecked" })
 	@RequestMapping("/FindNowSchedule")
 	public String findNowSchedule(Model model,String mid,String date) {
-	    List<HashMap> listM = bookTicketOneService.findMovieNameAndDefaultCityByMovieId(mid);
+	    //该句无意义，仅测试idea的git和git push
+	    
+ 	    List<HashMap> listM = bookTicketOneService.findMovieNameAndDefaultCityByMovieId(mid);
 	    String movieName = null;
 	    String cityName = null;
 	    int size = listM.size();
